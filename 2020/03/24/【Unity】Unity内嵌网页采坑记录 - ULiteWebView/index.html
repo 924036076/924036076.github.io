@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.1">
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="baidu-site-verification" content="ufdWjXeu5V">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://www.eyangjoy.top').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":false,"style":"mac"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+<script data-ad-client="ca-pub-5315395292320261" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+  <meta name="description" content="【Unity】 Unity内嵌网页采坑记录 - ULiteWebView 前言  项目需要要求Unity项目能与H5交互，这可真的是难倒我这个弱鸡了。不过好在功夫不负有心人，在不停的摸索之后摸索出了解决方案。在这里要感谢ULiteWebView插件的作者，很热心的帮助我解决一些疑惑，还有身边的朋友，多多少少都有帮到我一些。附上插件下载链接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Unity】Unity内嵌网页采坑记录 - ULiteWebView">
+<meta property="og:url" content="http:&#x2F;&#x2F;www.eyangjoy.top&#x2F;2020&#x2F;03&#x2F;24&#x2F;%E3%80%90Unity%E3%80%91Unity%E5%86%85%E5%B5%8C%E7%BD%91%E9%A1%B5%E9%87%87%E5%9D%91%E8%AE%B0%E5%BD%95%20-%20ULiteWebView&#x2F;index.html">
+<meta property="og:site_name" content="catcode">
+<meta property="og:description" content="【Unity】 Unity内嵌网页采坑记录 - ULiteWebView 前言  项目需要要求Unity项目能与H5交互，这可真的是难倒我这个弱鸡了。不过好在功夫不负有心人，在不停的摸索之后摸索出了解决方案。在这里要感谢ULiteWebView插件的作者，很热心的帮助我解决一些疑惑，还有身边的朋友，多多少少都有帮到我一些。附上插件下载链接">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.eyangjoy.top&#x2F;images&#x2F;ULiteWebView&#x2F;builtsetting.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.eyangjoy.top&#x2F;images&#x2F;ULiteWebView&#x2F;gradle.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.eyangjoy.top&#x2F;images&#x2F;ULiteWebView&#x2F;file.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;www.eyangjoy.top&#x2F;images&#x2F;ULiteWebView&#x2F;template.png">
+<meta property="article:published_time" content="2020-03-24T03:04:09.000Z">
+<meta property="article:modified_time" content="2020-03-24T06:05:27.512Z">
+<meta property="article:author" content="磨人の折耳猫">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Unity">
+<meta property="article:tag" content="Editor">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;www.eyangjoy.top&#x2F;images&#x2F;ULiteWebView&#x2F;builtsetting.png">
+
+<link rel="canonical" href="http://www.eyangjoy.top/2020/03/24/%E3%80%90Unity%E3%80%91Unity%E5%86%85%E5%B5%8C%E7%BD%91%E9%A1%B5%E9%87%87%E5%9D%91%E8%AE%B0%E5%BD%95%20-%20ULiteWebView/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>【Unity】Unity内嵌网页采坑记录 - ULiteWebView | catcode</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">catcode</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">no game no life</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.eyangjoy.top/2020/03/24/%E3%80%90Unity%E3%80%91Unity%E5%86%85%E5%B5%8C%E7%BD%91%E9%A1%B5%E9%87%87%E5%9D%91%E8%AE%B0%E5%BD%95%20-%20ULiteWebView/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/kangna.jpg">
+      <meta itemprop="name" content="磨人の折耳猫">
+      <meta itemprop="description" content="浊酒半觞寻故客，黄粱一梦会旧人">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="catcode">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【Unity】Unity内嵌网页采坑记录 - ULiteWebView
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-03-24 11:04:09 / 修改时间：14:05:27" itemprop="dateCreated datePublished" datetime="2020-03-24T11:04:09+08:00">2020-03-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Unity/" itemprop="url" rel="index">
+                    <span itemprop="name">Unity</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="【Unity】-Unity内嵌网页采坑记录-ULiteWebView"><a href="#【Unity】-Unity内嵌网页采坑记录-ULiteWebView" class="headerlink" title="【Unity】 Unity内嵌网页采坑记录 - ULiteWebView"></a>【Unity】 Unity内嵌网页采坑记录 - ULiteWebView</h2><blockquote>
+<p><strong>前言</strong></p>
+</blockquote>
+<p>项目需要要求Unity项目能与H5交互，这可真的是难倒我这个弱鸡了。不过好在功夫不负有心人，在不停的摸索之后摸索出了解决方案。在这里要感谢ULiteWebView插件的作者，很热心的帮助我解决一些疑惑，还有身边的朋友，多多少少都有帮到我一些。附上插件<a href="https://github.com/jinglikeblue/ULiteWebView" target="_blank" rel="noopener">下载链接</a></p>
+<hr>
+<a id="more"></a>
+
+<blockquote>
+<p><strong>首先</strong></p>
+</blockquote>
+<p>关于ULiteWebView的使用方法官方Demo应该够容易入门了，有一点需要注意的是，只有LoadHtml只有在手机上运行才能加载出来</p>
+<blockquote>
+<p><strong>重点</strong></p>
+</blockquote>
+<p>关于ULiteWebView播放视频只有声音没有画面的原因，是因为没有开启硬件加速，硬件加速需要在AndroidMinifest文件里的activity添加  <strong>android:hardwareAccelerated=”true”</strong> 。重点来了！ 当你尝试在Unity里面放入自定义的AndroidMinifest后，并开启了硬件加速，打包完成的apk<br>在手机上运行照样无法渲染视频。是什么原因呢？</p>
+<p>首先我将项目打包成安卓项目<img src="/images/ULiteWebView/builtsetting.png" alt="">,并查看打包出来的Minifest文件</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">manifest</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">package</span>=<span class="string">"pieces.jing.ulitewebview"</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">android:versionCode</span>=<span class="string">"1"</span> <span class="attr">android:versionName</span>=<span class="string">"1.0"</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">android:installLocation</span>=<span class="string">"preferExternal"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">supports-screens</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">android:smallScreens</span>=<span class="string">"true"</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">android:normalScreens</span>=<span class="string">"true"</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">android:largeScreens</span>=<span class="string">"true"</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">android:xlargeScreens</span>=<span class="string">"true"</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">android:anyDensity</span>=<span class="string">"true"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">application</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">android:theme</span>=<span class="string">"@style/UnityThemeSelector"</span></span></span><br><span class="line"><span class="tag">     <span class="attr">android:label</span>=<span class="string">"@string/app_name"</span> </span></span><br><span class="line"><span class="tag">     <span class="attr">android:isGame</span>=<span class="string">"true"</span> </span></span><br><span class="line"><span class="tag">     <span class="attr">android:banner</span>=<span class="string">"@drawable/app_banner"</span> </span></span><br><span class="line"><span class="tag">     <span class="attr">android:icon</span>=<span class="string">"@mipmap/app_icon"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">activity</span> </span></span><br><span class="line"><span class="tag">        <span class="attr">android:label</span>=<span class="string">"@string/app_name"</span> </span></span><br><span class="line"><span class="tag">        <span class="attr">android:screenOrientation</span>=<span class="string">"sensorLandscape"</span> </span></span><br><span class="line"><span class="tag">        <span class="attr">android:launchMode</span>=<span class="string">"singleTask"</span> </span></span><br><span class="line"><span class="tag">        <span class="attr">android:configChanges</span>=<span class="string">"mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale|layoutDirection|density"</span> </span></span><br><span class="line"><span class="tag">        <span class="attr">android:hardwareAccelerated</span>=<span class="string">"false"</span> </span></span><br><span class="line"><span class="tag">        <span class="attr">android:name</span>=<span class="string">"pieces.jing.ulitewebview.UnityPlayerActivity"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.intent.action.MAIN"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">"android.intent.category.LAUNCHER"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">"android.intent.category.LEANBACK_LAUNCHER"</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">meta-data</span> <span class="attr">android:name</span>=<span class="string">"unityplayer.UnityActivity"</span> <span class="attr">android:value</span>=<span class="string">"true"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">activity</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta-data</span> <span class="attr">android:name</span>=<span class="string">"unity.build-id"</span> <span class="attr">android:value</span>=<span class="string">"9757b814-10c8-4646-8b69-94d7049a5648"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta-data</span> <span class="attr">android:name</span>=<span class="string">"unity.splash-mode"</span> <span class="attr">android:value</span>=<span class="string">"0"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta-data</span> <span class="attr">android:name</span>=<span class="string">"unity.splash-enable"</span> <span class="attr">android:value</span>=<span class="string">"True"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">application</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">uses-feature</span> <span class="attr">android:glEsVersion</span>=<span class="string">"0x00020000"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.INTERNET"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.WRITE_EXTERNAL_STORAGE"</span> <span class="attr">android:maxSdkVersion</span>=<span class="string">"18"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.READ_EXTERNAL_STORAGE"</span> <span class="attr">android:maxSdkVersion</span>=<span class="string">"18"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">uses-feature</span> <span class="attr">android:name</span>=<span class="string">"android.hardware.touchscreen"</span> <span class="attr">android:required</span>=<span class="string">"false"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">uses-feature</span> <span class="attr">android:name</span>=<span class="string">"android.hardware.touchscreen.multitouch"</span> <span class="attr">android:required</span>=<span class="string">"false"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">uses-feature</span> <span class="attr">android:name</span>=<span class="string">"android.hardware.touchscreen.multitouch.distinct"</span> <span class="attr">android:required</span>=<span class="string">"false"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">manifest</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到第 <strong>23</strong> 行 android:hardwareAccelerated=”false” 。纳尼！？我不是设置为true了么。虽然我不太明白安卓，但我猜测是我自定义的Minifest在打包合并的时候被覆盖掉了。那怎么办呢？在国内各种网站都找不到解决方法之后我决定派出调查军团出去查找原因。果然墙外的老哥个个都是人才233，很快就找到了解决方法。</p>
+<p>附上<a href="https://stackoverflow.com/questions/45820447/unity-force-android-hardware-acceleration" target="_blank" rel="noopener">链接</a></p>
+<p>根据我工地英语的翻译过后，我想就是只要在我的minifest被覆盖之后再修改hardwareAccelerated并覆盖已经被覆盖了的minifest就行了(雾)。顺便一提，这个方法只有通过Gradle打包才能通过，记得取消Export Project选项。当然是用Gradle打包的时候估计会遇到一对问题就是了233，这个等会我会粗略说一下。</p>
+<p>好了我们将需要用到的脚本拷贝完放到Unity的Editor目录下，代码如下</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections;</span><br><span class="line"><span class="keyword">using</span> System.IO;</span><br><span class="line"><span class="keyword">using</span> System.Text;</span><br><span class="line"><span class="keyword">using</span> System.Xml;</span><br><span class="line"><span class="keyword">using</span> UnityEditor.Android;</span><br><span class="line"><span class="keyword">using</span> UnityEditor.Callbacks;</span><br><span class="line"><span class="comment">//using UnityEditor.iOS.Xcode;</span></span><br><span class="line"><span class="keyword">using</span> UnityEditor;</span><br><span class="line"><span class="keyword">using</span> UnityEngine;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> UNITY_2018_1_OR_NEWER</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">UnityWebViewPostprocessBuild</span> : <span class="title">IPostGenerateGradleAndroidProject</span></span><br><span class="line">#else</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">UnityWebViewPostprocessBuild</span></span><br><span class="line">#endif</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span>/ for android/unity 2018.1 or newer</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span>/ cf. https://forum.unity.com/threads/android-hardwareaccelerated-is-forced-false-in-all-activities.532786/</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span>/ cf. https://github.com/Over17/UnityAndroidManifestCallback</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">OnPostGenerateGradleAndroidProject</span>(<span class="params"><span class="keyword">string</span> basePath</span>)</span> &#123;</span><br><span class="line">        Debug.Log(<span class="string">"adjusted AndroidManifest.xml."</span>);</span><br><span class="line">        <span class="keyword">var</span> androidManifest = <span class="keyword">new</span> AndroidManifest(GetManifestPath(basePath));</span><br><span class="line">        androidManifest.SetHardwareAccelerated(<span class="literal">true</span>);</span><br><span class="line">        androidManifest.Save();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> callbackOrder &#123;</span><br><span class="line">        <span class="keyword">get</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">string</span> <span class="title">GetManifestPath</span>(<span class="params"><span class="keyword">string</span> basePath</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> pathBuilder = <span class="keyword">new</span> StringBuilder(basePath);</span><br><span class="line">        pathBuilder.Append(Path.DirectorySeparatorChar).Append(<span class="string">"src"</span>);</span><br><span class="line">        pathBuilder.Append(Path.DirectorySeparatorChar).Append(<span class="string">"main"</span>);</span><br><span class="line">        pathBuilder.Append(Path.DirectorySeparatorChar).Append(<span class="string">"AndroidManifest.xml"</span>);</span><br><span class="line">        <span class="keyword">return</span> pathBuilder.ToString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span>/ for others</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> UNITYWEBVIEW_ANDROID_USE_ACTIVITY_NAME</span></span><br><span class="line">    <span class="comment">// please modify ACTIVITY_NAME if you set UNITYWEBVIEW_ANDROID_USE_ACTIVITY_NAME and utilize any custom activty.</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">string</span> ACTIVITY_NAME = <span class="string">"com.unity3d.player.UnityPlayerActivity"</span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">    [<span class="meta">PostProcessBuild(100)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">OnPostprocessBuild</span>(<span class="params">BuildTarget buildTarget, <span class="keyword">string</span> path</span>)</span> &#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> !UNITY_2018_1_OR_NEWER</span></span><br><span class="line">        <span class="keyword">if</span> (buildTarget == BuildTarget.Android) &#123;</span><br><span class="line">            <span class="keyword">string</span> manifest = Path.Combine(Application.dataPath, <span class="string">"Plugins/Android/AndroidManifest.xml"</span>);</span><br><span class="line">            <span class="keyword">if</span> (!File.Exists(manifest)) &#123;</span><br><span class="line">                <span class="keyword">string</span> manifest0 = Path.Combine(Application.dataPath, <span class="string">"../Temp/StagingArea/AndroidManifest-main.xml"</span>);</span><br><span class="line">                <span class="keyword">if</span> (!File.Exists(manifest0)) &#123;</span><br><span class="line">                    Debug.LogError(<span class="string">"cannot find both Assets/Plugins/Android/AndroidManifest.xml and Temp/StagingArea/AndroidManifest-main.xml. please build the app to generate Assets/Plugins/Android/AndroidManifest.xml and then rebuild it again."</span>);</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    File.Copy(manifest0, manifest);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            XmlDocument doc = <span class="keyword">new</span> XmlDocument();</span><br><span class="line">            doc.Load(manifest);</span><br><span class="line">            XmlElement activity = SearchActivity(doc);</span><br><span class="line">            <span class="keyword">if</span> (activity != <span class="literal">null</span></span><br><span class="line">                &amp;&amp; <span class="keyword">string</span>.IsNullOrEmpty(activity.GetAttribute(<span class="string">"android:hardwareAccelerated"</span>))) &#123;</span><br><span class="line">                activity.SetAttribute(<span class="string">"hardwareAccelerated"</span>, <span class="string">"http://schemas.android.com/apk/res/android"</span>, <span class="string">"true"</span>);</span><br><span class="line">                doc.Save(manifest);</span><br><span class="line">                Debug.LogError(<span class="string">"adjusted AndroidManifest.xml about android:hardwareAccelerated. Please rebuild the app."</span>);</span><br><span class="line">            &#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> UNITY_5_6_0 || UNITY_5_6_1</span></span><br><span class="line">            <span class="keyword">if</span> (activity != <span class="literal">null</span></span><br><span class="line">                &amp;&amp; activity.GetAttribute(<span class="string">"android:name"</span>) == <span class="string">"com.unity3d.player.UnityPlayerActivity"</span>) &#123;</span><br><span class="line">                activity.SetAttribute(<span class="string">"name"</span>, <span class="string">"http://schemas.android.com/apk/res/android"</span>, <span class="string">"net.gree.unitywebview.CUnityPlayerActivity"</span>);</span><br><span class="line">                doc.Save(manifest);</span><br><span class="line">                Debug.LogError(<span class="string">"adjusted AndroidManifest.xml about android:name. Please rebuild the app."</span>);</span><br><span class="line">            &#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">        &#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">     <span class="comment">/*   if (buildTarget == BuildTarget.iOS) &#123;</span></span><br><span class="line"><span class="comment">            string projPath = path + "/Unity-iPhone.xcodeproj/project.pbxproj";</span></span><br><span class="line"><span class="comment">            PBXProject proj = new PBXProject();</span></span><br><span class="line"><span class="comment">            proj.ReadFromString(File.ReadAllText(projPath));</span></span><br><span class="line"><span class="comment">            string target = proj.TargetGuidByName("Unity-iPhone");</span></span><br><span class="line"><span class="comment">            proj.AddFrameworkToProject(target, "WebKit.framework", false);</span></span><br><span class="line"><span class="comment">            File.WriteAllText(projPath, proj.WriteToString());</span></span><br><span class="line"><span class="comment">        &#125;*/</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> XmlElement <span class="title">SearchActivity</span>(<span class="params">XmlDocument doc</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">foreach</span> (XmlNode node0 <span class="keyword">in</span> doc.DocumentElement.ChildNodes) &#123;</span><br><span class="line">            <span class="keyword">if</span> (node0.Name == <span class="string">"application"</span>) &#123;</span><br><span class="line">                <span class="keyword">foreach</span> (XmlNode node1 <span class="keyword">in</span> node0.ChildNodes) &#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> UNITYWEBVIEW_ANDROID_USE_ACTIVITY_NAME</span></span><br><span class="line">                    <span class="keyword">if</span> (node1.Name == <span class="string">"activity"</span></span><br><span class="line">                        &amp;&amp; ((XmlElement)node1).GetAttribute(<span class="string">"android:name"</span>) == ACTIVITY_NAME) &#123;</span><br><span class="line">                        <span class="keyword">return</span> (XmlElement)node1;</span><br><span class="line">                    &#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">                    <span class="keyword">if</span> (node1.Name == <span class="string">"activity"</span>) &#123;</span><br><span class="line">                        <span class="keyword">foreach</span> (XmlNode node2 <span class="keyword">in</span> node1.ChildNodes) &#123;</span><br><span class="line">                            <span class="keyword">if</span> (node2.Name == <span class="string">"intent-filter"</span>) &#123;</span><br><span class="line">                                <span class="keyword">bool</span> hasActionMain = <span class="literal">false</span>;</span><br><span class="line">                                <span class="keyword">bool</span> hasCategoryLauncher = <span class="literal">false</span>;</span><br><span class="line">                                <span class="keyword">foreach</span> (XmlNode node3 <span class="keyword">in</span> node2.ChildNodes) &#123;</span><br><span class="line">                                    <span class="keyword">if</span> (node3.Name == <span class="string">"action"</span></span><br><span class="line">                                        &amp;&amp; ((XmlElement)node3).GetAttribute(<span class="string">"android:name"</span>) == <span class="string">"android.intent.action.MAIN"</span>) &#123;</span><br><span class="line">                                        hasActionMain = <span class="literal">true</span>;</span><br><span class="line">                                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (node3.Name == <span class="string">"category"</span></span><br><span class="line">                                               &amp;&amp; ((XmlElement)node3).GetAttribute(<span class="string">"android:name"</span>) == <span class="string">"android.intent.category.LAUNCHER"</span>) &#123;</span><br><span class="line">                                        hasCategoryLauncher = <span class="literal">true</span>;</span><br><span class="line">                                    &#125;</span><br><span class="line">                                &#125;</span><br><span class="line">                                <span class="keyword">if</span> (hasActionMain &amp;&amp; hasCategoryLauncher) &#123;</span><br><span class="line">                                    <span class="keyword">return</span> (XmlElement)node1;</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">internal</span> <span class="keyword">class</span> <span class="title">AndroidXmlDocument</span> : <span class="title">XmlDocument</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">string</span> m_Path;</span><br><span class="line">    <span class="keyword">protected</span> XmlNamespaceManager nsMgr;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">readonly</span> <span class="keyword">string</span> AndroidXmlNamespace = <span class="string">"http://schemas.android.com/apk/res/android"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">AndroidXmlDocument</span>(<span class="params"><span class="keyword">string</span> path</span>)</span> &#123;</span><br><span class="line">        m_Path = path;</span><br><span class="line">        <span class="keyword">using</span> (<span class="keyword">var</span> reader = <span class="keyword">new</span> XmlTextReader(m_Path)) &#123;</span><br><span class="line">            reader.Read();</span><br><span class="line">            Load(reader);</span><br><span class="line">        &#125;</span><br><span class="line">        nsMgr = <span class="keyword">new</span> XmlNamespaceManager(NameTable);</span><br><span class="line">        nsMgr.AddNamespace(<span class="string">"android"</span>, AndroidXmlNamespace);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">string</span> <span class="title">Save</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> SaveAs(m_Path);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">string</span> <span class="title">SaveAs</span>(<span class="params"><span class="keyword">string</span> path</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">using</span> (<span class="keyword">var</span> writer = <span class="keyword">new</span> XmlTextWriter(path, <span class="keyword">new</span> UTF8Encoding(<span class="literal">false</span>))) &#123;</span><br><span class="line">            writer.Formatting = Formatting.Indented;</span><br><span class="line">            Save(writer);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> path;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">internal</span> <span class="keyword">class</span> <span class="title">AndroidManifest</span> : <span class="title">AndroidXmlDocument</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> XmlElement ApplicationElement;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">AndroidManifest</span>(<span class="params"><span class="keyword">string</span> path</span>) : <span class="title">base</span>(<span class="params">path</span>)</span> &#123;</span><br><span class="line">        ApplicationElement = SelectSingleNode(<span class="string">"/manifest/application"</span>) <span class="keyword">as</span> XmlElement;</span><br><span class="line">        Debug.Log (<span class="string">"ApplicationElement: "</span> + ApplicationElement);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> XmlAttribute <span class="title">CreateAndroidAttribute</span>(<span class="params"><span class="keyword">string</span> key, <span class="keyword">string</span> <span class="keyword">value</span></span>)</span> &#123;</span><br><span class="line">        XmlAttribute attr = CreateAttribute(<span class="string">"android"</span>, key, AndroidXmlNamespace);</span><br><span class="line">        attr.Value = <span class="keyword">value</span>;</span><br><span class="line">        <span class="keyword">return</span> attr;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">internal</span> XmlNode <span class="title">GetActivityWithLaunchIntent</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">            SelectSingleNode(</span><br><span class="line">                <span class="string">"/manifest/application/activity[intent-filter/action/@android:name='android.intent.action.MAIN' and "</span></span><br><span class="line">                + <span class="string">"intent-filter/category/@android:name='android.intent.category.LAUNCHER']"</span>,</span><br><span class="line">                nsMgr);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">internal</span> <span class="keyword">void</span> <span class="title">SetHardwareAccelerated</span>(<span class="params"><span class="keyword">bool</span> enabled</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> activity = GetActivityWithLaunchIntent() <span class="keyword">as</span> XmlElement;</span><br><span class="line">        activity.SetAttribute(<span class="string">"android:hardwareAccelerated"</span>, (enabled) ? <span class="string">"true"</span> : <span class="string">"false"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ok! 快去打包试试看吧！</p>
+<hr>
+<blockquote>
+<p><strong>Gradle打包失败的坑</strong></p>
+</blockquote>
+<ol>
+<li>如果你看到这里你应该被Gradle搞到崩溃了吧，反正我是抓狂了一天了！具体问题其实我也不太清楚，但是大致方向我还是知道的，首先Gradle打包需要连接到外网，如果你打包卡在最后一步很久很久很久~那么八成是网络问题，你可以断网试一下，估计就会打包失败了（划重点：翻墙工具）。</li>
+<li>检查一下Unity使用的gradle的版本，路径为项目Assets文件夹同级下的Temp文件夹下<strong>Temp/gradleOut/.gradle</strong>。我这里打包的时候自动下载的是5.1.1版本，如图对应的是<img src="/images/ULiteWebView/gradle.png" alt=""><br>然后我们打开 <strong>PlayerSetting</strong> 勾选 <strong>Custom Gradle Template!</strong> <a href="/images/ULiteWebView/custom.png"></a><br>对应会生成一个文件<img src="/images/ULiteWebView/file.png" alt=""><br>修改mainTemplate文件<img src="/images/ULiteWebView/template.png" alt=""><br>注意google()要放在jcenter()上面，别问我为什么，我也不清楚。这里gradle的版本对应上面那张图，我Unity使用的是 5.1.1 所以应该对应 3.4.0。</li>
+</ol>
+<hr>
+<p>当然还有一些琐碎的坑就需要自己努力了~ QQ924036076 欢迎交流~</p>
+
+    </div>
+
+    
+    
+    
+
+    <div>
+      
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------<i class="fa fa-github"></i>本文结束感谢您的阅读<i class="fa fa-github"></i>-------------</div>
+    
+</div>
+      
+    </div>
+        <div class="reward-container">
+  <div>如果文章有帮助到您~就赏点小鱼干支持一下吧~_(:з」∠)_</div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/qrcode/wechatpay.jpg" alt="磨人の折耳猫 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/qrcode/alipay.jpg" alt="磨人の折耳猫 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>磨人の折耳猫
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://www.eyangjoy.top/2020/03/24/%E3%80%90Unity%E3%80%91Unity%E5%86%85%E5%B5%8C%E7%BD%91%E9%A1%B5%E9%87%87%E5%9D%91%E8%AE%B0%E5%BD%95%20-%20ULiteWebView/" title="【Unity】Unity内嵌网页采坑记录 - ULiteWebView">http://www.eyangjoy.top/2020/03/24/【Unity】Unity内嵌网页采坑记录 - ULiteWebView/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/null" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+              <a href="/tags/Unity/" rel="tag"><i class="fa fa-tag"></i> Unity</a>
+              <a href="/tags/Editor/" rel="tag"><i class="fa fa-tag"></i> Editor</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/16/%E3%80%90Unity%E3%80%91%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B%E4%B8%AD%E5%B0%86Texture2D%E8%BD%AC%E6%8D%A2%E4%B8%BASprite/" rel="prev" title="【Unity】运行过程中将Texture2D转换为Sprite">
+      <i class="fa fa-chevron-left"></i> 【Unity】运行过程中将Texture2D转换为Sprite
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/04/15/%E3%80%90Unity%E3%80%91DoTween%E5%AE%9E%E7%8E%B0%E6%BB%9A%E5%8A%A8%E6%95%B0%E5%AD%97/" rel="next" title="【Unity】DoTween实现滚动数字">
+      【Unity】DoTween实现滚动数字 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#【Unity】-Unity内嵌网页采坑记录-ULiteWebView"><span class="nav-number">1.</span> <span class="nav-text">【Unity】 Unity内嵌网页采坑记录 - ULiteWebView</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="磨人の折耳猫"
+      src="/images/kangna.jpg">
+  <p class="site-author-name" itemprop="name">磨人の折耳猫</p>
+  <div class="site-description" itemprop="description">浊酒半觞寻故客，黄粱一梦会旧人</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/924036076" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;924036076" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">磨人の折耳猫</span>
+</div>
+
+  <div class="powered-by">
+  <i class="fa fa-user-md"></i>
+  <span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+  </span>
+  </div>
+
+<!--  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.1.1
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.6.0
+  </div>
+-->
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共5.5k字</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='150' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+</body>
+</html>
